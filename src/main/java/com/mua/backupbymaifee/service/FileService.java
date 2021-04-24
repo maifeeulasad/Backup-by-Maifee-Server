@@ -1,5 +1,6 @@
 package com.mua.backupbymaifee.service;
 
+import com.mua.backupbymaifee.util.FileUtil;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestPart;
@@ -21,13 +22,13 @@ public class FileService {
             @RequestPart MultipartFile multipartFile) {
         try {
             String filepath = backupDir + absolutePath;
+            filepath = FileUtil.getAvailablePath(filepath);
             File file = new File(filepath);
             if(!file.getParentFile().exists()){
                 file.getParentFile().mkdirs();
             }
             OutputStream os = Files.newOutputStream(Path.of(filepath));
             os.write(multipartFile.getBytes());
-            //System.out.println(filepath);
             return true;
         } catch (Exception e) {
             System.out.println("failed");
